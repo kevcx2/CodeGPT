@@ -87,6 +87,7 @@ const InputCommandMenu = () => {
             title={command.title}
             selected={currentIndex === i}
             onClick={command.action}
+            onMouseOver={() => setCurrentIndex(i)}
           />
         ))}
         <CommandMenuHeader>TEMPLATES</CommandMenuHeader>
@@ -116,14 +117,9 @@ const MenuItemContainer = styled.div`
   align-items: center;
   padding: 10px 10px;
   font-weight: 400;
-  &:hover {
-    background-color: var(--vscode-menu-selectionBackground);
-    color: var(--vscode-menu-selectionForeground);
-    cursor: pointer;
-  }
 `;
 
-const SlashMenuItem = ({ title, selected, onClick }) => {
+const SlashMenuItem = ({ title, selected, onClick, onMouseOver }) => {
   return (
     <MenuItemContainer
       style={
@@ -135,6 +131,7 @@ const SlashMenuItem = ({ title, selected, onClick }) => {
           : undefined
       }
       onClick={onClick}
+      onMouseOver={onMouseOver}
     >
       <CodeSnippetIcon />
       {title}

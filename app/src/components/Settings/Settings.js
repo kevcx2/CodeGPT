@@ -23,7 +23,8 @@ const SettingsTextArea = styled(VSCodeTextArea)`
 
 const Settings = () => {
   const {
-    openAiKey,
+    apiKey,
+    setApiKey,
     AVAIALBLE_MODELS,
     model: currentModel,
     setModel,
@@ -34,7 +35,10 @@ const Settings = () => {
 
   return (
     <>
-      <SettingsTextField type="text" value={openAiKey}>
+      <SettingsTextField
+        type="text" value={apiKey}
+        onChange={(e) => setApiKey(e.target.value)}
+      >
         OpenAI API key
       </SettingsTextField>
       <VSCodeRadioGroup

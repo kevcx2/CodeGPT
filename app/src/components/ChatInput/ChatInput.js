@@ -59,6 +59,7 @@ const TokenCount = styled.p`
 const TOKEN_LIMITS = {
   "gpt-4": 8000,
   "gpt-3.5-turbo": 4000,
+  "gpt-4-32k": 32000,
 };
 
 const ChatInput = ({ onSubmit, isLoading }) => {

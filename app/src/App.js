@@ -9,7 +9,10 @@ import styled from "styled-components";
 import Chat from "./components/Chat";
 import Settings from "./components/Settings/Settings";
 import { SettingsProvider } from "./components/Settings/settingsService";
-import { EditorSyncProvider } from "./bridge";
+import {
+  EditorSyncProvider,
+  SettingsSyncProvider
+} from "./bridge";
 
 const AppContainer = styled.div`
   height: 100vh;
@@ -41,8 +44,9 @@ function App() {
   // VSCodePanelView and re-implement them myself.
   return (
     <AppContainer>
-      <SettingsProvider>
+      <SettingsSyncProvider>
         <EditorSyncProvider>
+        <SettingsProvider>
           <TabContainer>
             <VSCodePanels>
               <VSCodePanelTab
@@ -79,8 +83,9 @@ function App() {
               <Settings />
             </div>
           </ContentContainer>
+        </SettingsProvider>
         </EditorSyncProvider>
-      </SettingsProvider>
+      </SettingsSyncProvider>
     </AppContainer>
   );
 }

@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
 import { syncEditorState } from "./bridge";
+import { syncSettingsState, saveSetting } from "./settings";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(registerCustomView(context));
@@ -12,7 +13,7 @@ function registerCustomView(
 ): vscode.Disposable {
   return vscode.window.registerWebviewViewProvider(
     "CodeGPT",
-    new YourCustomViewProvider(context),
+    new GPTChatViewProvider(context),
     {
       webviewOptions: {
         retainContextWhenHidden: true,
@@ -21,7 +22,7 @@ function registerCustomView(
   );
 }
 
-export class YourCustomViewProvider implements vscode.WebviewViewProvider {
+export class GPTChatViewProvider implements vscode.WebviewViewProvider {
   private _view?: vscode.WebviewView;
   private context: vscode.ExtensionContext;
 
@@ -43,13 +44,18 @@ export class YourCustomViewProvider implements vscode.WebviewViewProvider {
     );
 
     const postMessageListener = listenToMessagesFromWebView(webviewView);
-    const unsubscribeListeners = syncEditorState((state) =>
-      notifyWebView(webviewView, state)
+    
+    const unsubscribeEditorListeners = syncEditorState((state) =>
+      notifyWebViewOfEditorChange(webviewView, state)
+    );
+    const unsubscribeSettingsListeners = syncSettingsState((state) =>
+      notifyWebviewOfSettingsChange(webviewView, state)
     );
 
     webviewView.onDidDispose(() => {
       postMessageListener.dispose();
-      unsubscribeListeners();
+      unsubscribeEditorListeners();
+      unsubscribeSettingsListeners();
     });
   }
 }
@@ -95,9 +101,28 @@ function listenToMessagesFromWebView(
     if (event.api === "env.clipboard.writeText") {
       vscode.env.clipboard.writeText(event.arguments[0]);
     }
+    if (event.api === "saveApiKeySetting") {
+      saveSetting('apiKey', event.argument);
+    }
+    if (event.api === 'saveSystemPromptSetting') {
+      saveSetting('systemPrompt', event.argument);
+    }
+    if (event.api === 'saveModelSetting') {
+      saveSetting('model', event.argument);
+    }
   });
 }
 
-function notifyWebView(webviewView: vscode.WebviewView, state: any): void {
+function notifyWebViewOfEditorChange(
+  webviewView: vscode.WebviewView,
+  state: any
+): void {
   webviewView.webview.postMessage({ ...state, type: "editorSync" });
+}
+
+function notifyWebviewOfSettingsChange(
+  webviewView: vscode.WebviewView,
+  state: any
+): void {
+  webviewView.webview.postMessage({ ...state, type: "settingsSync" });
 }

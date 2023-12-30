@@ -23,10 +23,64 @@ if (!isRunningAsVscodeExtension) {
   root.style.setProperty("--vscode-input-background", "#1D1F23");
 }
 
+const useSettingsSync = () => {
+  const [ apiKey, setApiKey ] = useState()
+  const [ systemPrompt, setSystemPrompt ] = useState()
+  const [ model, setModel ] = useState()
+
+  const update = (syncMessageEvent) => {
+    const syncMessage = syncMessageEvent.data;
+    if (syncMessage.type === "settingsSync") {
+      setApiKey(syncMessage.apiKey)
+      setSystemPrompt(syncMessage.systemPrompt)
+      setModel(syncMessage.model)
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("message", update);
+
+    if (!isRunningAsVscodeExtension) {
+      // Set some defaults during local development
+      setSystemPrompt("you are a coding assistant")
+      setModel("gpt-3.5-turbo")
+    }
+    return () => {
+      window.removeEventListener("message", update);
+    };
+  }, []);
+
+  return {
+    apiKey,
+    setApiKey: (newKey) => {
+      setApiKey(newKey)
+      window.vscode.postMessage({
+        api: 'saveApiKeySetting',
+        argument: newKey,
+      })
+    },
+    systemPrompt,
+    setSystemPrompt: (newPrompt) => {
+      setSystemPrompt(newPrompt)
+      window.vscode.postMessage({
+        api: 'saveSystemPromptSetting',
+        argument: newPrompt,
+      })
+    },
+    model,
+    setModel: (newModel) => {
+      setModel(newModel)
+      window.vscode.postMessage({
+        api: 'saveModelSetting',
+        argument: newModel,
+      })
+    },
+  }
+}
+
 const useEditorSync = () => {
   const [activeEditorDocument, setActiveEditorDocument] = useState("");
   const [activeEditorSelection, setActiveEditorSelection] = useState("");
-  const [savedSettings, setSavedSettings] = useState("");
 
   const update = (syncMessageEvent) => {
     const syncMessage = syncMessageEvent.data;
@@ -34,10 +88,6 @@ const useEditorSync = () => {
       const { activeEditorDocument, activeEditorSelection } = syncMessage;
       setActiveEditorDocument(activeEditorDocument);
       setActiveEditorSelection(activeEditorSelection);
-    }
-    if (syncMessage.type === "settingsSync") {
-      setSavedSettings(syncMessage);
-      console.log("saved", syncMessage);
     }
   };
 
@@ -55,5 +105,11 @@ const useEditorSync = () => {
 };
 
 const [EditorSyncProvider, useEditorSyncContext] = constate(useEditorSync);
+const [SettingsSyncProvider, useSettingsSyncContext] = constate(useSettingsSync);
 
-export { EditorSyncProvider, useEditorSyncContext };
+export {
+  EditorSyncProvider,
+  useEditorSyncContext,
+  SettingsSyncProvider,
+  useSettingsSyncContext,
+};

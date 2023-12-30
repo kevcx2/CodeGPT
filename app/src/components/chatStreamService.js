@@ -43,8 +43,7 @@ const createChatMessage = ({ content, role, meta }) => ({
 });
 
 export const useOpenAIChatStream = () => {
-  const { model, openAiKey } = useSettingsContext();
-  const apiKey = openAiKey;
+  const { model, apiKey } = useSettingsContext();
 
   const [messages, setMessages] = useState([]);
   const [controller, setController] = useState(null);
