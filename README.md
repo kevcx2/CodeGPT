@@ -1,7 +1,6 @@
 # CodeGPT VSCode Extension
 
 ChatGPT in your IDE. Featuring:
-- Locally stored API key
 - Editable system prompt
 - Streaming chat responses
 - Markdown & code rendering in chat
