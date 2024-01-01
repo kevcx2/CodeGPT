@@ -10,3 +10,6 @@ ChatGPT in your IDE. Featuring:
 - Editable chat history
 - Color theme support
 - Native look and feel, using Microsoft's [webview ui toolkit](https://github.com/microsoft/vscode-webview-ui-toolkit)
+
+# Structure
+The chat UI and network interface with AI APIs are built as a react app, rendered by the extension via a webview. The extension host process code lives in the `src` directory. The react chat app code is inside the `webview` directory.
