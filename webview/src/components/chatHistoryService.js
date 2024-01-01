@@ -25,6 +25,9 @@ const useChatHistory = () => {
     const newSystemMessage = createEmptyChatState(systemPrompt)[0]
     activeChatMessages[0] = newSystemMessage
     updateChatHistory(activeChatMessages, activeChatId)
+    // Only want this effect to run when the system prompt
+    // is edited.
+    // eslint-disable-next-line
   }, [systemPrompt])
 
   const updateChatHistory = (messages, chatId) => {

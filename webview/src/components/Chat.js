@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import ChatInput from "./ChatInput/ChatInput";
-import ChatDialogue from "./Dialogue/ChatDialogue";
-import { PromptInputProvider } from "./ChatInput/promptInputService";
-import { SnippetsProvider } from "./ChatInput/snippetService";
-import SlashCommandMenu from "./ChatInput/PromptCommandMenu";
+import ChatInput from "./ChatInput/ChatInput.js";
+import ChatDialogue from "./Dialogue/ChatDialogue.js";
+import { PromptInputProvider } from "./ChatInput/promptInputService.js";
+import { SnippetsProvider } from "./ChatInput/snippetService.js";
+import SlashCommandMenu from "./ChatInput/PromptCommandMenu.js";
 
-import { ChatHistoryProvider } from "./chatHistoryService";
-import { ChatStreamProvider } from "./chatStreamService";
-import { useChat } from "./chatService";
+import { ChatHistoryProvider } from "./chatHistoryService.js";
+import { ChatStreamProvider } from "./chatStreamService.js";
+import { useChat } from "./chatService.js";
 import useScrollTrap from "./useScrollTrap.js";
 
 const ChatContainer = styled.div`
