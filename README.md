@@ -13,3 +13,5 @@ ChatGPT in your IDE. Featuring:
 
 # Structure
 The chat UI and network interface with AI APIs are built as a react app, rendered by the extension via a webview. The extension host process code lives in the `src` directory. The react chat app code is inside the `webview` directory.
+
+[demo](https://vimeo.com/899047172)
